@@ -85,15 +85,54 @@ Agent response to "Any errors in the last hour?" under normal conditions:
 
 ## Task 4A — Multi-step investigation
 
-<!-- Paste the agent's response to "What went wrong?" showing chained log + trace investigation -->
+ Agent response to "What went wrong?":                                                                                                                                                                                 
+                                                                                                                                                                                                                        
+  I'll investigate what went wrong in the system.                                                                                                                                                                     
+                                                                                                                                                                                                                        
+  1. First, checking error count in the last hour...                                                                                                                                                                    
+                                                                                                                                                                                                                        
+  Found 3 errors in the last hour, all from "Learning Management Service".                                                                                                                                              
+                                                                                                                                                                                                                      
+  2. Getting error details...                                                                                                                                                                                           
+                                                                                                                                                                                                                      
+  Error Log Sample:                                                                                                                                                                                                     
+  - Timestamp: 2026-03-27T17:42:51 UTC                                                                                                                                                                                
+  - Service: Learning Management Service                                                                                                                                                                                
+  - Event: db_query                                                                                                                                                                                                   
+  - Error: [Errno -2] Name or service not known                                                                                                                                                                         
+  - Trace ID: cd497db26c3a04e292a3fd863218bb49                                                                                                                                                                          
+                                                                                                                                                                                                                        
+  3. Fetching trace details for cd497db26c3a04e292a3fd863218bb49...                                                                                                                                                     
+                                                                                                                                                                                                                        
+  Span Hierarchy:                                                                                                                                                                                                       
+  └── GET /items/ (155ms) [ERROR]                                                                                                                                                                                     
+      ├── connect (123ms) [ERROR]                                                                                                                                                                                       
+      │   └── socket.gaierror: Name or service not known                                                                                                                                                                
+      └── HTTP response (500)                                                                                                                                                                                           
+                                                                                                                                                                                                                        
+  Root Cause Analysis:                                                                                                                                                                                                  
+  - Operation: GET /items/ endpoint                                                                                                                                                                                     
+  - What failed: Database connection attempt                                                                                                                                                                            
+  - Error: socket.gaierror - "Name or service not known"                                                                                                                                                                
+  - Location: asyncpg trying to resolve hostname 'postgres'                                                                                                                                                             
+  - Trace ID: cd497db26c3a04e292a3fd863218bb49                                                                                                                                                                          
+                                                                                                                                                                                                                        
+  The backend cannot resolve the PostgreSQL hostname. The database service may                                                                                                                                          
+  be down or the DNS/network configuration is incorrect.
 
 ## Task 4B — Proactive health check
 
-<!-- Screenshot or transcript of the proactive health report that appears in the Flutter chat -->
+<img width="3072" height="1740" alt="4B" src="https://github.com/user-attachments/assets/5e11eda0-5313-400e-9134-7475144a2ccc" />
+
 
 ## Task 4C — Bug fix and recovery
 
-<!-- 1. Root cause identified
-     2. Code fix (diff or description)
-     3. Post-fix response to "What went wrong?" showing the real underlying failure
-     4. Healthy follow-up report or transcript after recovery -->
+ 1. Root cause: FastAPI exception handler missing request: Request parameter                                                                                                                                           
+                                                                                                                                                                                                                        
+  2. Code fix:                                                                                                                                                                                                        
+  - async def unhandled_exception_handler(exc: Exception):                                                                                                                                                              
+  + async def unhandled_exception_handler(request: Request, exc: Exception):                                                                                                                                          
+                                                                                                                                                                                                                        
+  3. Post-fix response: Now shows real database error instead of TypeError                                                                                                                                              
+                                                                                                                                                                                                                        
+  4. Healthy follow-up: Errors in last hour: 0 - Status: ✅ All systems healthy
