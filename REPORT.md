@@ -5,27 +5,22 @@ Paste your checkpoint evidence below. Add screenshots as image files in the repo
 ## Task 1A — Bare agent
 <img width="1423" height="564" alt="image" src="https://github.com/user-attachments/assets/005ad53c-cb73-422a-b54c-6b8fc17e4a4b" />
 
-<!-- Paste the agent's response to "What is the agentic loop?" and "What labs are available in our LMS?" -->
 
 ## Task 1B — Agent with LMS tools
 <img width="1270" height="848" alt="image" src="https://github.com/user-attachments/assets/fdfa93d3-95d0-4998-a671-0d6011437a48" />
 
-<!-- Paste the agent's response to "What labs are available?" and "Describe the architecture of the LMS system" -->
 
 ## Task 1C — Skill prompt
 <img width="815" height="631" alt="image" src="https://github.com/user-attachments/assets/0602aef5-cc29-4d9e-b098-9f9b879881d6" />
 
-<!-- Paste the agent's response to "Show me the scores" (without specifying a lab) -->
 
 ## Task 2A — Deployed agent
 <img width="1465" height="816" alt="image" src="https://github.com/user-attachments/assets/406632e5-5d32-4999-97b1-c444ca96d347" />
 
-<!-- Paste a short nanobot startup log excerpt showing the gateway started inside Docker -->
 
 ## Task 2B — Web client
 <img width="1533" height="836" alt="image" src="https://github.com/user-attachments/assets/bbe07956-3b0e-4564-8fea-fa7354206a56" />
 
-<!-- Screenshot of a conversation with the agent in the Flutter web app -->
 
 ## Task 3A — Structured logging
 
