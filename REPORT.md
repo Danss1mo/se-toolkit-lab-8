@@ -29,15 +29,59 @@ Paste your checkpoint evidence below. Add screenshots as image files in the repo
 
 ## Task 3A — Structured logging
 
-<!-- Paste happy-path and error-path log excerpts, VictoriaLogs query screenshot -->
-
+Happy-path log excerpt (request_started → request_completed with status 200):                                                                                                                                       
+                                                                                                                                                                                                                        
+  {"_msg":"request_started","_time":"2026-03-27T13:39:19.872167168Z","event":"request_started","method":"GET","path":"/items/","trace_id":"bee06c4fabbfa22ba7202e1615b99231","span_id":"94a1b0bf3bc20db9","service.name"
+  :"Learning Management Service","severity":"INFO"}                                                                                                                                                                     
+                                                                                                                                                                                                                        
+  {"_msg":"auth_success","_time":"2026-03-27T13:39:19.882909952Z","event":"auth_success","trace_id":"bee06c4fabbfa22ba7202e1615b99231","span_id":"94a1b0bf3bc20db9","service.name":"Learning Management                 
+  Service","severity":"INFO"}                                                                                                                                                                                         
+                                                                                                                                                                                                                        
+  {"_msg":"db_query","_time":"2026-03-27T13:39:19.890270464Z","event":"db_query","operation":"select","table":"item","trace_id":"bee06c4fabbfa22ba7202e1615b99231","span_id":"94a1b0bf3bc20db9","service.name":"Learning
+   Management Service","severity":"INFO"}                                                                                                                                                                             
+                                                                                                                                                                                                                        
+  {"_msg":"request_completed","_time":"2026-03-27T13:39:19.99407744Z","event":"request_completed","method":"GET","path":"/items/","status":"200","duration_ms":"121","trace_id":"bee06c4fabbfa22ba7202e1615b99231","span
+  _id":"94a1b0bf3bc20db9","service.name":"Learning Management Service","severity":"INFO"}                                                                                                                             
+                                                                                                                                                                                                                        
+  Error-path log excerpt (db_query with error when PostgreSQL stopped):                                                                                                                                                 
+                                                                                                                                                                                                                      
+  {"_msg":"request_started","_time":"2026-03-27T14:08:17.707687424Z","event":"request_started","method":"GET","path":"/items/","trace_id":"91603eba5f8293bcd9a59ff56bb6e5aa","span_id":"b1c4e8a57bc0c665","service.name"
+  :"Learning Management Service","severity":"INFO"}                                                                                                                                                                     
+                                                                                                                                                                                                                        
+  {"_msg":"auth_success","_time":"2026-03-27T14:08:17.708615936Z","event":"auth_success","trace_id":"91603eba5f8293bcd9a59ff56bb6e5aa","span_id":"b1c4e8a57bc0c665","service.name":"Learning Management                 
+  Service","severity":"INFO"}                                                                                                                                                                                         
+                                                                                                                                                                                                                        
+  {"_msg":"db_query","_time":"2026-03-27T14:08:17.757910272Z","event":"db_query","operation":"select","table":"item","error":"(sqlalchemy.dialects.postgresql.asyncpg.InterfaceError) <class                            
+  'asyncpg.exceptions._base.InterfaceError'>: connection is closed\n[SQL: SELECT item.id, item.type, item.parent_id, item.title, item.description, item.attributes, item.created_at FROM                              
+  item]","trace_id":"91603eba5f8293bcd9a59ff56bb6e5aa","span_id":"b1c4e8a57bc0c665","service.name":"Learning Management Service","severity":"ERROR"}                                                                    
+                                                                                                                                                                                                                      
+  VictoriaLogs query screenshot:                                                                                                                                                                                        
+   
+  <img width="1532" height="275" alt="image" src="https://github.com/user-attachments/assets/31fce299-1785-4550-b704-fa6d8fab7f17" />
+                                                                                                                                                                                             
+                                                                                                                                                                                                                      
+  Query used: _stream:{service.name=~".*"} AND severity:ERROR    
+  
 ## Task 3B — Traces
+healthy trace: <img width="1522" height="763" alt="image" src="https://github.com/user-attachments/assets/431bb3b0-502b-40c6-b703-c88487b48073" />
+Error trace: <img width="1536" height="859" alt="image" src="https://github.com/user-attachments/assets/adc3a1c6-7c1d-4321-8ebe-f5d62154c908" />
 
-<!-- Screenshots: healthy trace span hierarchy, error trace -->
 
 ## Task 3C — Observability MCP tools
 
-<!-- Paste agent responses to "any errors in the last hour?" under normal and failure conditions -->
+Agent response to "Any errors in the last hour?" under normal conditions:                                                                                           
+                                                                                                                                                                        
+  No, there were no ERROR-level logs recorded in the past hour.                                                                                                         
+  The most recent error we found was at 14:08 UTC, which is just over an hour ago.                                                                                      
+                                                                                                                                                                        
+  Agent response to "Any errors in the last hour?" after stopping PostgreSQL:                                                                                           
+                                                                                                                                                                        
+  There was **one error in the last hour** (between 15:20 and 15:22 UTC):                                                                                               
+                                                                                                                                                                        
+  | Time (UTC) | Service | Operation | Error Message | Trace ID |                                                                                                       
+  |------------|---------|----------|---------------|----------|                                                                                                        
+  | 2026‑03‑27 15:20:41.845 | Learning Management Service | `db_query` (select) | `[Errno -2] Name or service not known` | `81a0e6a2d072220073d01255c1bb9599` |         
+                                                                                                                                                 
 
 ## Task 4A — Multi-step investigation
 
